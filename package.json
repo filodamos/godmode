@@ -1,16 +1,34 @@
 {
   "name": "godmode",
-  "displayName": "godmode",
-  "description": "An emacs inspired godmode for VSCode",
-  "version": "0.0.1",
+  "displayName": "Godmode",
+  "description": "An emacs-inspired modal editing extension for VS Code with navigation, text selection, and file operations",
+  "version": "0.1.15",
+  "publisher": "filodamos",
+  "author": {
+    "name": "Filodamos Papanatsios",
+    "email": "filodamos@outlook.fr"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/filodamos/godmode.git"
+  },
+  "keywords": [
+    "emacs",
+    "modal",
+    "navigation",
+    "keybindings",
+    "editing",
+    "godmode"
+  ],
   "engines": {
-    "vscode": "^1.99.0"
+    "vscode": "^1.60.0"
   },
   "categories": [
-    "Other"
+    "Keymaps"
   ],
   "activationEvents": [
-    "*"
+    "onStartupFinished"
   ],
   "main": "./dist/extension.js",
   "contributes": {
@@ -52,6 +70,18 @@
         "title": "Godmode: Save File"
       },
       {
+        "command": "godmode.showAllEditors",
+        "title": "Godmode: Show All Editors"
+      },
+      {
+        "command": "godmode.focusFilesExplorer",
+        "title": "Godmode: Toggle Sidebar"
+      },
+      {
+        "command": "godmode.openFile",
+        "title": "Godmode: Open File"
+      },
+      {
         "command": "godmode.forwardSearch",
         "title": "Godmode: Forward Search"
       },
@@ -66,6 +96,86 @@
       {
         "command": "godmode.recenterTopBottom",
         "title": "Godmode: Recenter Top/Bottom"
+      },
+      {
+        "command": "godmode.killRegion",
+        "title": "Godmode: Kill Region"
+      },
+      {
+        "command": "godmode.killLine",
+        "title": "Godmode: Kill Line"
+      },
+      {
+        "command": "godmode.foldAll",
+        "title": "Godmode: Fold All"
+      },
+      {
+        "command": "godmode.unfoldRecursively",
+        "title": "Godmode: Unfold Recursively"
+      },
+      {
+        "command": "godmode.unfoldAll",
+        "title": "Godmode: Unfold All"
+      },
+      {
+        "command": "godmode.foldLevel1",
+        "title": "Godmode: Fold Level 1"
+      },
+      {
+        "command": "godmode.foldLevel2",
+        "title": "Godmode: Fold Level 2"
+      },
+      {
+        "command": "godmode.foldLevel3",
+        "title": "Godmode: Fold Level 3"
+      },
+      {
+        "command": "godmode.lineBreakInsert",
+        "title": "Godmode: Line Break Insert"
+      },
+      {
+        "command": "godmode.yank",
+        "title": "Godmode: Yank"
+      },
+      {
+        "command": "godmode.deleteRight",
+        "title": "Godmode: Delete Right"
+      },
+      {
+        "command": "godmode.closeActiveEditor",
+        "title": "Godmode: Close Active Editor"
+      },
+      {
+        "command": "godmode.newLine",
+        "title": "Godmode: New Line"
+      },
+      {
+        "command": "godmode.commentLine",
+        "title": "Godmode: Comment Line"
+      },
+      {
+        "command": "godmode.closeEditorsInOtherGroups",
+        "title": "Godmode: Close Editors in Other Groups"
+      },
+      {
+        "command": "godmode.splitEditorDown",
+        "title": "Godmode: Split Editor Down"
+      },
+      {
+        "command": "godmode.splitEditorRight",
+        "title": "Godmode: Split Editor Right"
+      },
+      {
+        "command": "godmode.highlightWords",
+        "title": "Godmode: Highlight Words"
+      },
+      {
+        "command": "godmode.navigateEditorGroups",
+        "title": "Godmode: Navigate Editor Groups"
+      },
+      {
+        "command": "godmode.gotoLine",
+        "title": "Godmode: Go to Line"
       }
     ],
     "keybindings": [
@@ -77,6 +187,11 @@
       {
         "command": "godmode.toggleSelectMode",
         "key": "space",
+        "when": "editorTextFocus && godmode.active"
+      },
+      {
+        "command": "godmode.gotoLine",
+        "key": "g g",
         "when": "editorTextFocus && godmode.active"
       },
       {
@@ -115,6 +230,21 @@
         "when": "editorTextFocus && godmode.active"
       },
       {
+        "command": "godmode.showAllEditors",
+        "key": "x space b",
+        "when": "editorTextFocus && godmode.active"
+      },
+      {
+        "command": "godmode.focusFilesExplorer",
+        "key": "x space n",
+        "when": "editorTextFocus && godmode.active"
+      },
+      {
+        "command": "godmode.openFile",
+        "key": "x f",
+        "when": "editorTextFocus && godmode.active"
+      },
+      {
         "command": "godmode.forwardSearch",
         "key": "s",
         "when": "editorTextFocus && godmode.active"
@@ -132,6 +262,101 @@
       {
         "command": "godmode.recenterTopBottom",
         "key": "l",
+        "when": "editorTextFocus && godmode.active"
+      },
+      {
+        "command": "godmode.killRegion",
+        "key": "w",
+        "when": "editorTextFocus && godmode.active"
+      },
+      {
+        "command": "godmode.killLine",
+        "key": "k",
+        "when": "editorTextFocus && godmode.active"
+      },
+      {
+        "command": "godmode.foldAll",
+        "key": "c space h",
+        "when": "editorTextFocus && godmode.active"
+      },
+      {
+        "command": "godmode.unfoldRecursively",
+        "key": "c space s",
+        "when": "editorTextFocus && godmode.active"
+      },
+      {
+        "command": "godmode.unfoldAll",
+        "key": "c space a",
+        "when": "editorTextFocus && godmode.active"
+      },
+      {
+        "command": "godmode.foldLevel1",
+        "key": "c space 1",
+        "when": "editorTextFocus && godmode.active"
+      },
+      {
+        "command": "godmode.foldLevel2",
+        "key": "c space 2",
+        "when": "editorTextFocus && godmode.active"
+      },
+      {
+        "command": "godmode.foldLevel3",
+        "key": "c space 3",
+        "when": "editorTextFocus && godmode.active"
+      },
+      {
+        "command": "godmode.highlightWords",
+        "key": "c space 9",
+        "when": "editorTextFocus && godmode.active"
+      },
+      {
+        "command": "godmode.navigateEditorGroups",
+        "key": "x space o",
+        "when": "editorTextFocus && godmode.active"
+      },
+      {
+        "command": "godmode.lineBreakInsert",
+        "key": "o",
+        "when": "editorTextFocus && godmode.active"
+      },
+      {
+        "command": "godmode.yank",
+        "key": "y",
+        "when": "editorTextFocus && godmode.active"
+      },
+      {
+        "command": "godmode.deleteRight",
+        "key": "d",
+        "when": "editorTextFocus && godmode.active"
+      },
+      {
+        "command": "godmode.closeActiveEditor",
+        "key": "x space k",
+        "when": "editorTextFocus && godmode.active"
+      },
+      {
+        "command": "godmode.newLine",
+        "key": "enter",
+        "when": "editorTextFocus && godmode.active"
+      },
+      {
+        "command": "godmode.commentLine",
+        "key": ";",
+        "when": "editorTextFocus && godmode.active"
+      },
+      {
+        "command": "godmode.closeEditorsInOtherGroups",
+        "key": "x space 1",
+        "when": "editorTextFocus && godmode.active"
+      },
+      {
+        "command": "godmode.splitEditorDown",
+        "key": "x space 2",
+        "when": "editorTextFocus && godmode.active"
+      },
+      {
+        "command": "godmode.splitEditorRight",
+        "key": "x space 3",
         "when": "editorTextFocus && godmode.active"
       }
     ]
@@ -151,7 +376,7 @@
     "test": "vscode-test"
   },
   "devDependencies": {
-    "@types/vscode": "^1.101.0",
+    "@types/vscode": "^1.60.0",
     "@types/mocha": "^10.0.10",
     "@types/node": "20.x",
     "@typescript-eslint/eslint-plugin": "^8.31.1",

@@ -11,8 +11,6 @@ let recenterState = 0; // 0 = top, 1 = center, 2 = bottom
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
 	console.log("Godmode extension is now active!");
 
 	// Create status bar item to show godmode status
@@ -26,9 +24,7 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(statusBarItem);
 
 	// Initialize cursor style to block (normal editing mode)
-	vscode.workspace
-		.getConfiguration("editor")
-		.update("cursorStyle", "block", true);
+	updateCursorStyle(false);
 
 	// Register toggle godmode command (bound to Escape)
 	const toggleGodmode = vscode.commands.registerCommand(
@@ -83,7 +79,6 @@ export function activate(context: vscode.ExtensionContext) {
 	// Register movement commands
 	const moveDown = vscode.commands.registerCommand("godmode.moveDown", () => {
 		if (isGodmodeActive) {
-			vscode.commands.executeCommand("godmode.internal.trackMovement");
 			recenterState = 0; // Reset recenter state on navigation
 			if (isSelectModeActive) {
 				vscode.commands.executeCommand("cursorDownSelect");
@@ -95,7 +90,6 @@ export function activate(context: vscode.ExtensionContext) {
 
 	const moveUp = vscode.commands.registerCommand("godmode.moveUp", () => {
 		if (isGodmodeActive) {
-			vscode.commands.executeCommand("godmode.internal.trackMovement");
 			recenterState = 0; // Reset recenter state on navigation
 			if (isSelectModeActive) {
 				vscode.commands.executeCommand("cursorUpSelect");
@@ -109,7 +103,6 @@ export function activate(context: vscode.ExtensionContext) {
 		"godmode.moveForward",
 		() => {
 			if (isGodmodeActive) {
-				vscode.commands.executeCommand("godmode.internal.trackMovement");
 				recenterState = 0; // Reset recenter state on navigation
 				if (isSelectModeActive) {
 					vscode.commands.executeCommand("cursorRightSelect");
@@ -124,7 +117,6 @@ export function activate(context: vscode.ExtensionContext) {
 		"godmode.moveBackward",
 		() => {
 			if (isGodmodeActive) {
-				vscode.commands.executeCommand("godmode.internal.trackMovement");
 				recenterState = 0; // Reset recenter state on navigation
 				if (isSelectModeActive) {
 					vscode.commands.executeCommand("cursorLeftSelect");
@@ -137,7 +129,6 @@ export function activate(context: vscode.ExtensionContext) {
 
 	const pageDown = vscode.commands.registerCommand("godmode.pageDown", () => {
 		if (isGodmodeActive) {
-			vscode.commands.executeCommand("godmode.internal.trackMovement");
 			recenterState = 0; // Reset recenter state on navigation
 			if (isSelectModeActive) {
 				vscode.commands.executeCommand("cursorPageDownSelect");
@@ -149,7 +140,6 @@ export function activate(context: vscode.ExtensionContext) {
 
 	const pageUp = vscode.commands.registerCommand("godmode.pageUp", () => {
 		if (isGodmodeActive) {
-			vscode.commands.executeCommand("godmode.internal.trackMovement");
 			recenterState = 0; // Reset recenter state on navigation
 			if (isSelectModeActive) {
 				vscode.commands.executeCommand("cursorPageUpSelect");
@@ -165,11 +155,36 @@ export function activate(context: vscode.ExtensionContext) {
 		}
 	});
 
+	const showAllEditors = vscode.commands.registerCommand(
+		"godmode.showAllEditors",
+		() => {
+			if (isGodmodeActive) {
+				vscode.commands.executeCommand("workbench.action.showAllEditors");
+			}
+		},
+	);
+
+	const focusFilesExplorer = vscode.commands.registerCommand(
+		"godmode.focusFilesExplorer",
+		() => {
+			if (isGodmodeActive) {
+				vscode.commands.executeCommand(
+					"workbench.action.toggleSidebarVisibility",
+				);
+			}
+		},
+	);
+
+	const openFile = vscode.commands.registerCommand("godmode.openFile", () => {
+		if (isGodmodeActive) {
+			vscode.commands.executeCommand("workbench.action.quickOpen");
+		}
+	});
+
 	const forwardSearch = vscode.commands.registerCommand(
 		"godmode.forwardSearch",
 		() => {
 			if (isGodmodeActive) {
-				vscode.commands.executeCommand("godmode.internal.trackMovement");
 				vscode.commands.executeCommand("actions.find");
 			}
 		},
@@ -179,7 +194,6 @@ export function activate(context: vscode.ExtensionContext) {
 		"godmode.beginningOfLine",
 		() => {
 			if (isGodmodeActive) {
-				vscode.commands.executeCommand("godmode.internal.trackMovement");
 				recenterState = 0; // Reset recenter state on navigation
 				if (isSelectModeActive) {
 					vscode.commands.executeCommand("cursorHomeSelect");
@@ -192,7 +206,6 @@ export function activate(context: vscode.ExtensionContext) {
 
 	const endOfLine = vscode.commands.registerCommand("godmode.endOfLine", () => {
 		if (isGodmodeActive) {
-			vscode.commands.executeCommand("godmode.internal.trackMovement");
 			recenterState = 0; // Reset recenter state on navigation
 			if (isSelectModeActive) {
 				vscode.commands.executeCommand("cursorEndSelect");
@@ -206,7 +219,6 @@ export function activate(context: vscode.ExtensionContext) {
 		"godmode.recenterTopBottom",
 		() => {
 			if (isGodmodeActive) {
-				vscode.commands.executeCommand("godmode.internal.trackMovement");
 				const editor = vscode.window.activeTextEditor;
 				if (editor) {
 					const currentPosition = editor.selection.active;
@@ -250,6 +262,172 @@ export function activate(context: vscode.ExtensionContext) {
 		},
 	);
 
+	const killRegion = vscode.commands.registerCommand(
+		"godmode.killRegion",
+		() => {
+			if (isGodmodeActive) {
+				vscode.commands.executeCommand("emacs-mcx.killRegion");
+			}
+		},
+	);
+
+	const killLine = vscode.commands.registerCommand("godmode.killLine", () => {
+		if (isGodmodeActive) {
+			vscode.commands.executeCommand("emacs-mcx.killLine");
+		}
+	});
+
+	// Code folding commands
+	const foldAll = vscode.commands.registerCommand("godmode.foldAll", () => {
+		if (isGodmodeActive) {
+			vscode.commands.executeCommand("editor.foldAll");
+		}
+	});
+
+	const unfoldRecursively = vscode.commands.registerCommand(
+		"godmode.unfoldRecursively",
+		() => {
+			if (isGodmodeActive) {
+				vscode.commands.executeCommand("editor.unfoldRecursively");
+			}
+		},
+	);
+
+	const unfoldAll = vscode.commands.registerCommand("godmode.unfoldAll", () => {
+		if (isGodmodeActive) {
+			vscode.commands.executeCommand("editor.unfoldAll");
+		}
+	});
+
+	const foldLevel1 = vscode.commands.registerCommand(
+		"godmode.foldLevel1",
+		() => {
+			if (isGodmodeActive) {
+				vscode.commands.executeCommand("editor.foldLevel1");
+			}
+		},
+	);
+
+	const foldLevel2 = vscode.commands.registerCommand(
+		"godmode.foldLevel2",
+		() => {
+			if (isGodmodeActive) {
+				vscode.commands.executeCommand("editor.foldLevel2");
+			}
+		},
+	);
+
+	const foldLevel3 = vscode.commands.registerCommand(
+		"godmode.foldLevel3",
+		() => {
+			if (isGodmodeActive) {
+				vscode.commands.executeCommand("editor.foldLevel3");
+			}
+		},
+	);
+
+	const lineBreakInsert = vscode.commands.registerCommand(
+		"godmode.lineBreakInsert",
+		() => {
+			if (isGodmodeActive) {
+				vscode.commands.executeCommand("lineBreakInsert");
+			}
+		},
+	);
+
+	const yank = vscode.commands.registerCommand("godmode.yank", () => {
+		if (isGodmodeActive) {
+			vscode.commands.executeCommand("emacs-mcx.yank");
+		}
+	});
+
+	const deleteRight = vscode.commands.registerCommand(
+		"godmode.deleteRight",
+		() => {
+			if (isGodmodeActive) {
+				vscode.commands.executeCommand("deleteRight");
+			}
+		},
+	);
+
+	const closeActiveEditor = vscode.commands.registerCommand(
+		"godmode.closeActiveEditor",
+		() => {
+			if (isGodmodeActive) {
+				vscode.commands.executeCommand("workbench.action.closeActiveEditor");
+			}
+		},
+	);
+
+	const newLine = vscode.commands.registerCommand("godmode.newLine", () => {
+		if (isGodmodeActive) {
+			vscode.commands.executeCommand("emacs-mcx.newLine");
+		}
+	});
+
+	const commentLine = vscode.commands.registerCommand(
+		"godmode.commentLine",
+		() => {
+			if (isGodmodeActive) {
+				vscode.commands.executeCommand("editor.action.commentLine");
+			}
+		},
+	);
+
+	// Editor management commands
+	const closeEditorsInOtherGroups = vscode.commands.registerCommand(
+		"godmode.closeEditorsInOtherGroups",
+		() => {
+			if (isGodmodeActive) {
+				vscode.commands.executeCommand(
+					"workbench.action.closeEditorsInOtherGroups",
+				);
+			}
+		},
+	);
+
+	const splitEditorDown = vscode.commands.registerCommand(
+		"godmode.splitEditorDown",
+		() => {
+			if (isGodmodeActive) {
+				vscode.commands.executeCommand("workbench.action.splitEditorDown");
+			}
+		},
+	);
+
+	const splitEditorRight = vscode.commands.registerCommand(
+		"godmode.splitEditorRight",
+		() => {
+			if (isGodmodeActive) {
+				vscode.commands.executeCommand("workbench.action.splitEditorRight");
+			}
+		},
+	);
+
+	const highlightWords = vscode.commands.registerCommand(
+		"godmode.highlightWords",
+		() => {
+			if (isGodmodeActive) {
+				vscode.commands.executeCommand("highlightwords.addHighlight");
+			}
+		},
+	);
+
+	const navigateEditorGroups = vscode.commands.registerCommand(
+		"godmode.navigateEditorGroups",
+		() => {
+			if (isGodmodeActive) {
+				vscode.commands.executeCommand("workbench.action.navigateEditorGroups");
+			}
+		},
+	);
+
+	const gotoLine = vscode.commands.registerCommand("godmode.gotoLine", () => {
+		if (isGodmodeActive) {
+			vscode.commands.executeCommand("emacs-mcx.gotoLine");
+		}
+	});
+
 	// Add all commands to subscriptions
 	context.subscriptions.push(
 		toggleGodmode,
@@ -261,14 +439,50 @@ export function activate(context: vscode.ExtensionContext) {
 		pageDown,
 		pageUp,
 		saveFile,
+		showAllEditors,
+		focusFilesExplorer,
+		openFile,
 		forwardSearch,
 		beginningOfLine,
 		endOfLine,
 		recenterTopBottom,
+		killRegion,
+		killLine,
+		foldAll,
+		unfoldRecursively,
+		unfoldAll,
+		foldLevel1,
+		foldLevel2,
+		foldLevel3,
+		lineBreakInsert,
+		yank,
+		deleteRight,
+		closeActiveEditor,
+		newLine,
+		commentLine,
+		closeEditorsInOtherGroups,
+		splitEditorDown,
+		splitEditorRight,
+		highlightWords,
+		navigateEditorGroups,
+		gotoLine,
 	);
 
 	// Set up typing prevention when godmode is active
 	setupTypingPrevention(context);
+}
+
+function updateCursorStyle(isGodmode: boolean) {
+	// Use try-catch to prevent configuration update errors
+	try {
+		const cursorStyle = isGodmode ? "line" : "block";
+		vscode.workspace
+			.getConfiguration("editor")
+			.update("cursorStyle", cursorStyle, vscode.ConfigurationTarget.Global);
+	} catch (error) {
+		// Silently ignore configuration errors
+		console.log("Could not update cursor style:", error);
+	}
 }
 
 function updateStatusBar() {
@@ -281,67 +495,34 @@ function updateStatusBar() {
 			statusBarItem.color = "#ff6b6b";
 		}
 		// Set cursor to line when in godmode (navigation mode)
-		vscode.workspace
-			.getConfiguration("editor")
-			.update("cursorStyle", "line", true);
+		updateCursorStyle(true);
 	} else {
 		statusBarItem.text = "$(circle-outline) Normal";
 		statusBarItem.color = undefined;
 		// Set cursor to block when not in godmode (editing mode)
-		vscode.workspace
-			.getConfiguration("editor")
-			.update("cursorStyle", "block", true);
+		updateCursorStyle(false);
 	}
 }
 
 function setupTypingPrevention(context: vscode.ExtensionContext) {
-	// Track if we're currently executing a movement command
-	let isExecutingMovementCommand = false;
-
-	// Register text document change listener to prevent typing in godmode and handle select mode
-	const changeListener = vscode.workspace.onDidChangeTextDocument((event) => {
-		if (isGodmodeActive && event.contentChanges.length > 0) {
-			// If we're in select mode and this change wasn't from a movement command, exit select mode
-			if (isSelectModeActive && !isExecutingMovementCommand) {
-				isSelectModeActive = false;
-				updateStatusBar();
-				return; // Allow the change to proceed
-			}
-
-			// Check if changes are from regular typing (not commands) in regular godmode
-			if (!isSelectModeActive) {
-				const change = event.contentChanges[0];
-				if (change.text.length > 0 && change.rangeLength === 0) {
-					// This looks like regular typing, undo it
-					const editor = vscode.window.activeTextEditor;
-					if (editor && editor.document === event.document) {
-						editor.edit((editBuilder) => {
-							editBuilder.delete(
-								new vscode.Range(
-									change.range.start,
-									change.range.start.translate(0, change.text.length),
-								),
-							);
-						});
-					}
-				}
-			}
+	// Register type command override to prevent typing in godmode
+	const typeCommand = vscode.commands.registerCommand("type", (args) => {
+		if (isGodmodeActive && !isSelectModeActive) {
+			// Prevent typing in godmode (but allow it in select mode)
+			return;
 		}
+
+		// If we're in select mode and user types, exit select mode and allow typing
+		if (isSelectModeActive) {
+			isSelectModeActive = false;
+			updateStatusBar();
+		}
+
+		// Execute the default type command
+		return vscode.commands.executeCommand("default:type", args);
 	});
 
-	// Set up command execution tracking to know when we're running movement commands
-	const commandListener = vscode.commands.registerCommand(
-		"godmode.internal.trackMovement",
-		() => {
-			isExecutingMovementCommand = true;
-			// Reset the flag after a short delay
-			setTimeout(() => {
-				isExecutingMovementCommand = false;
-			}, 100);
-		},
-	);
-
-	context.subscriptions.push(changeListener, commandListener);
+	context.subscriptions.push(typeCommand);
 }
 
 // This method is called when your extension is deactivated
