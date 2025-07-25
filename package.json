@@ -2,7 +2,7 @@
   "name": "godmode",
   "displayName": "Godmode",
   "description": "An emacs-inspired modal editing extension for VS Code with navigation, text selection, and file operations",
-  "version": "0.1.15",
+  "version": "0.1.23",
   "publisher": "filodamos",
   "author": {
     "name": "Filodamos Papanatsios",
@@ -176,6 +176,10 @@
       {
         "command": "godmode.gotoLine",
         "title": "Godmode: Go to Line"
+      },
+      {
+        "command": "godmode.copyWithAltW",
+        "title": "Godmode: Copy with Alt+W"
       }
     ],
     "keybindings": [
@@ -242,7 +246,7 @@
       {
         "command": "godmode.openFile",
         "key": "x f",
-        "when": "editorTextFocus && godmode.active"
+        "when": "godmode.active"
       },
       {
         "command": "godmode.forwardSearch",
@@ -357,6 +361,11 @@
       {
         "command": "godmode.splitEditorRight",
         "key": "x space 3",
+        "when": "editorTextFocus && godmode.active"
+      },
+      {
+        "command": "godmode.copyWithAltW",
+        "key": "alt+w",
         "when": "editorTextFocus && godmode.active"
       }
     ]

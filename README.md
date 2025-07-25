@@ -5,18 +5,20 @@ An emacs-inspired modal editing extension for VSCode that provides efficient cur
 ## Features
 
 - **Modal editing mode**: Toggle between normal typing and movement-only mode
-- **Visual feedback**: Status bar indicator shows current mode
+- **Visual feedback**: Status bar indicator shows current mode with cursor style changes
 - **Efficient navigation**: Use single keys for cursor movement
 - **Typing prevention**: Automatically prevents typing in godmode
+- **Cursor styling**: Different cursor styles for each mode (block vs line)
 
 ## Usage
 
 ### Activating/Deactivating Godmode
 
-- Press `Alt+h` to toggle godmode on/off
+- Press `Escape` to toggle godmode on/off
 - The status bar will show:
-  - `○ Normal` when godmode is off (normal typing)
-  - `● Godmode` when godmode is on (movement only)
+  - `○ Normal` when godmode is off (normal typing) - block cursor
+  - `● Godmode` when godmode is on (movement only) - line cursor
+  - `☑ Select Mode` when in select mode - line cursor
 
 ### Movement Commands (when godmode is active)
 
@@ -24,6 +26,14 @@ An emacs-inspired modal editing extension for VSCode that provides efficient cur
 - `p` - Move cursor up  
 - `f` - Move cursor forward (right)
 - `b` - Move cursor backward (left)
+
+### Select Mode Behavior
+
+- Press `Space` to enter select mode while in godmode
+- Select mode automatically exits when:
+  - You start typing
+  - You copy text with Alt+W
+  - You press `Escape` to exit godmode
 
 ### Setting Up Caps Lock (Optional)
 
@@ -61,11 +71,15 @@ To test the extension:
 
 ## Keyboard Shortcuts
 
-- `Alt+h` - Toggle godmode
+- `Escape` - Toggle godmode
+- `Space` - Toggle select mode (when godmode active)
 - `n` - Move down (when godmode active)
 - `p` - Move up (when godmode active)  
 - `f` - Move right (when godmode active)
 - `b` - Move left (when godmode active)
+- `Alt+W` - Copy and exit select mode (when godmode active)
+
+
 
 ## Installation
 

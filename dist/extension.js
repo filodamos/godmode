@@ -1,1 +1,520 @@
-"use strict";var oe=Object.create;var l=Object.defineProperty;var de=Object.getOwnPropertyDescriptor;var me=Object.getOwnPropertyNames;var se=Object.getPrototypeOf,ce=Object.prototype.hasOwnProperty;var ne=(d,m)=>{for(var t in m)l(d,t,{get:m[t],enumerable:!0})},w=(d,m,t,r)=>{if(m&&typeof m=="object"||typeof m=="function")for(let a of me(m))!ce.call(d,a)&&a!==t&&l(d,a,{get:()=>m[a],enumerable:!(r=de(m,a))||r.enumerable});return d};var te=(d,m,t)=>(t=d!=null?oe(se(d)):{},w(m||!d||!d.__esModule?l(t,"default",{value:d,enumerable:!0}):t,d)),ae=d=>w(l({},"__esModule",{value:!0}),d);var ge={};ne(ge,{activate:()=>ie,deactivate:()=>le});module.exports=ae(ge);var e=te(require("vscode")),o=!1,s=!1,n,c=0;function ie(d){console.log("Godmode extension is now active!"),n=e.window.createStatusBarItem(e.StatusBarAlignment.Left,100),n.text="$(circle-outline) Normal",n.tooltip="Godmode Status",n.show(),d.subscriptions.push(n),u(!1);let m=e.commands.registerCommand("godmode.toggle",()=>{if(s){s=!1,g();return}o=!o,o||(s=!1),g(),e.commands.executeCommand("setContext","godmode.active",o)}),t=e.commands.registerCommand("godmode.toggleSelectMode",()=>{o||(o=!0,e.commands.executeCommand("setContext","godmode.active",o)),s=!s,g()}),r=e.commands.registerCommand("godmode.moveDown",()=>{o&&(c=0,s?e.commands.executeCommand("cursorDownSelect"):e.commands.executeCommand("cursorDown"))}),a=e.commands.registerCommand("godmode.moveUp",()=>{o&&(c=0,s?e.commands.executeCommand("cursorUpSelect"):e.commands.executeCommand("cursorUp"))}),h=e.commands.registerCommand("godmode.moveForward",()=>{o&&(c=0,s?e.commands.executeCommand("cursorRightSelect"):e.commands.executeCommand("cursorRight"))}),L=e.commands.registerCommand("godmode.moveBackward",()=>{o&&(c=0,s?e.commands.executeCommand("cursorLeftSelect"):e.commands.executeCommand("cursorLeft"))}),E=e.commands.registerCommand("godmode.pageDown",()=>{o&&(c=0,s?e.commands.executeCommand("cursorPageDownSelect"):e.commands.executeCommand("cursorPageDown"))}),k=e.commands.registerCommand("godmode.pageUp",()=>{o&&(c=0,s?e.commands.executeCommand("cursorPageUpSelect"):e.commands.executeCommand("cursorPageUp"))}),R=e.commands.registerCommand("godmode.saveFile",()=>{o&&e.commands.executeCommand("workbench.action.files.save")}),b=e.commands.registerCommand("godmode.showAllEditors",()=>{o&&e.commands.executeCommand("workbench.action.showAllEditors")}),S=e.commands.registerCommand("godmode.focusFilesExplorer",()=>{o&&e.commands.executeCommand("workbench.action.toggleSidebarVisibility")}),y=e.commands.registerCommand("godmode.openFile",()=>{o&&e.commands.executeCommand("workbench.action.quickOpen")}),A=e.commands.registerCommand("godmode.forwardSearch",()=>{o&&e.commands.executeCommand("actions.find")}),T=e.commands.registerCommand("godmode.beginningOfLine",()=>{o&&(c=0,s?e.commands.executeCommand("cursorHomeSelect"):e.commands.executeCommand("cursorHome"))}),B=e.commands.registerCommand("godmode.endOfLine",()=>{o&&(c=0,s?e.commands.executeCommand("cursorEndSelect"):e.commands.executeCommand("cursorEnd"))}),G=e.commands.registerCommand("godmode.recenterTopBottom",()=>{if(o){let i=e.window.activeTextEditor;if(i){let v=i.selection.active,f=new e.Range(v,v);if(c===0)i.revealRange(f,e.TextEditorRevealType.AtTop),c=1;else if(c===1)i.revealRange(f,e.TextEditorRevealType.InCenter),c=2;else{let C=i.visibleRanges;if(C.length>0){let x=C[0],Z=x.end.line-x.start.line,_=Math.max(0,v.line-Z+1),p=new e.Position(_,0),ee=new e.Range(p,p);i.revealRange(ee,e.TextEditorRevealType.AtTop)}c=0}}}}),D=e.commands.registerCommand("godmode.killRegion",()=>{o&&e.commands.executeCommand("emacs-mcx.killRegion")}),I=e.commands.registerCommand("godmode.killLine",()=>{o&&e.commands.executeCommand("emacs-mcx.killLine")}),F=e.commands.registerCommand("godmode.foldAll",()=>{o&&e.commands.executeCommand("editor.foldAll")}),O=e.commands.registerCommand("godmode.unfoldRecursively",()=>{o&&e.commands.executeCommand("editor.unfoldRecursively")}),P=e.commands.registerCommand("godmode.unfoldAll",()=>{o&&e.commands.executeCommand("editor.unfoldAll")}),U=e.commands.registerCommand("godmode.foldLevel1",()=>{o&&e.commands.executeCommand("editor.foldLevel1")}),M=e.commands.registerCommand("godmode.foldLevel2",()=>{o&&e.commands.executeCommand("editor.foldLevel2")}),$=e.commands.registerCommand("godmode.foldLevel3",()=>{o&&e.commands.executeCommand("editor.foldLevel3")}),H=e.commands.registerCommand("godmode.lineBreakInsert",()=>{o&&e.commands.executeCommand("lineBreakInsert")}),N=e.commands.registerCommand("godmode.yank",()=>{o&&e.commands.executeCommand("emacs-mcx.yank")}),V=e.commands.registerCommand("godmode.deleteRight",()=>{o&&e.commands.executeCommand("deleteRight")}),W=e.commands.registerCommand("godmode.closeActiveEditor",()=>{o&&e.commands.executeCommand("workbench.action.closeActiveEditor")}),q=e.commands.registerCommand("godmode.newLine",()=>{o&&e.commands.executeCommand("emacs-mcx.newLine")}),j=e.commands.registerCommand("godmode.commentLine",()=>{o&&e.commands.executeCommand("editor.action.commentLine")}),z=e.commands.registerCommand("godmode.closeEditorsInOtherGroups",()=>{o&&e.commands.executeCommand("workbench.action.closeEditorsInOtherGroups")}),J=e.commands.registerCommand("godmode.splitEditorDown",()=>{o&&e.commands.executeCommand("workbench.action.splitEditorDown")}),K=e.commands.registerCommand("godmode.splitEditorRight",()=>{o&&e.commands.executeCommand("workbench.action.splitEditorRight")}),Q=e.commands.registerCommand("godmode.highlightWords",()=>{o&&e.commands.executeCommand("highlightwords.addHighlight")}),X=e.commands.registerCommand("godmode.navigateEditorGroups",()=>{o&&e.commands.executeCommand("workbench.action.navigateEditorGroups")}),Y=e.commands.registerCommand("godmode.gotoLine",()=>{o&&e.commands.executeCommand("emacs-mcx.gotoLine")});d.subscriptions.push(m,t,r,a,h,L,E,k,R,b,S,y,A,T,B,G,D,I,F,O,P,U,M,$,H,N,V,W,q,j,z,J,K,Q,X,Y),re(d)}function u(d){try{let m=d?"line":"block";e.workspace.getConfiguration("editor").update("cursorStyle",m,e.ConfigurationTarget.Global)}catch(m){console.log("Could not update cursor style:",m)}}function g(){o?(s?(n.text="$(selection) Select Mode",n.color="#61dafb"):(n.text="$(circle-filled) Godmode",n.color="#ff6b6b"),u(!0)):(n.text="$(circle-outline) Normal",n.color=void 0,u(!1))}function re(d){let m=e.commands.registerCommand("type",t=>{if(!(o&&!s))return s&&(s=!1,g()),e.commands.executeCommand("default:type",t)});d.subscriptions.push(m)}function le(){n&&n.dispose()}0&&(module.exports={activate,deactivate});
+"use strict";
+var __create = Object.create;
+var __defProp = Object.defineProperty;
+var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+var __getOwnPropNames = Object.getOwnPropertyNames;
+var __getProtoOf = Object.getPrototypeOf;
+var __hasOwnProp = Object.prototype.hasOwnProperty;
+var __export = (target, all) => {
+  for (var name in all)
+    __defProp(target, name, { get: all[name], enumerable: true });
+};
+var __copyProps = (to, from, except, desc) => {
+  if (from && typeof from === "object" || typeof from === "function") {
+    for (let key of __getOwnPropNames(from))
+      if (!__hasOwnProp.call(to, key) && key !== except)
+        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
+  }
+  return to;
+};
+var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
+  // If the importer is in node compatibility mode or this is not an ESM
+  // file that has been converted to a CommonJS file using a Babel-
+  // compatible transform (i.e. "__esModule" has not been set), then set
+  // "default" to the CommonJS "module.exports" for node compatibility.
+  isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
+  mod
+));
+var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
+
+// src/extension.ts
+var extension_exports = {};
+__export(extension_exports, {
+  activate: () => activate,
+  deactivate: () => deactivate
+});
+module.exports = __toCommonJS(extension_exports);
+var vscode = __toESM(require("vscode"));
+var isGodmodeActive = false;
+var isSelectModeActive = false;
+var statusBarItem;
+var recenterState = 0;
+function activate(context) {
+  console.log("Godmode extension is now active!");
+  statusBarItem = vscode.window.createStatusBarItem(
+    vscode.StatusBarAlignment.Left,
+    100
+  );
+  statusBarItem.text = "$(circle-outline) Normal";
+  statusBarItem.tooltip = "Godmode Status";
+  statusBarItem.show();
+  context.subscriptions.push(statusBarItem);
+  updateCursorStyle("normal");
+  const toggleGodmode = vscode.commands.registerCommand(
+    "godmode.toggle",
+    () => {
+      if (isSelectModeActive) {
+        isSelectModeActive = false;
+        updateStatusBar();
+        return;
+      }
+      isGodmodeActive = !isGodmodeActive;
+      if (!isGodmodeActive) {
+        isSelectModeActive = false;
+      }
+      updateStatusBar();
+      vscode.commands.executeCommand(
+        "setContext",
+        "godmode.active",
+        isGodmodeActive
+      );
+    }
+  );
+  const toggleSelectMode = vscode.commands.registerCommand(
+    "godmode.toggleSelectMode",
+    () => {
+      if (!isGodmodeActive) {
+        isGodmodeActive = true;
+        vscode.commands.executeCommand(
+          "setContext",
+          "godmode.active",
+          isGodmodeActive
+        );
+      }
+      isSelectModeActive = !isSelectModeActive;
+      updateStatusBar();
+    }
+  );
+  const moveDown = vscode.commands.registerCommand("godmode.moveDown", () => {
+    if (isGodmodeActive) {
+      recenterState = 0;
+      if (isSelectModeActive) {
+        vscode.commands.executeCommand("cursorDownSelect");
+      } else {
+        vscode.commands.executeCommand("cursorDown");
+      }
+    }
+  });
+  const moveUp = vscode.commands.registerCommand("godmode.moveUp", () => {
+    if (isGodmodeActive) {
+      recenterState = 0;
+      if (isSelectModeActive) {
+        vscode.commands.executeCommand("cursorUpSelect");
+      } else {
+        vscode.commands.executeCommand("cursorUp");
+      }
+    }
+  });
+  const moveForward = vscode.commands.registerCommand(
+    "godmode.moveForward",
+    () => {
+      if (isGodmodeActive) {
+        recenterState = 0;
+        if (isSelectModeActive) {
+          vscode.commands.executeCommand("cursorRightSelect");
+        } else {
+          vscode.commands.executeCommand("cursorRight");
+        }
+      }
+    }
+  );
+  const moveBackward = vscode.commands.registerCommand(
+    "godmode.moveBackward",
+    () => {
+      if (isGodmodeActive) {
+        recenterState = 0;
+        if (isSelectModeActive) {
+          vscode.commands.executeCommand("cursorLeftSelect");
+        } else {
+          vscode.commands.executeCommand("cursorLeft");
+        }
+      }
+    }
+  );
+  const pageDown = vscode.commands.registerCommand("godmode.pageDown", () => {
+    if (isGodmodeActive) {
+      recenterState = 0;
+      if (isSelectModeActive) {
+        vscode.commands.executeCommand("cursorPageDownSelect");
+      } else {
+        vscode.commands.executeCommand("cursorPageDown");
+      }
+    }
+  });
+  const pageUp = vscode.commands.registerCommand("godmode.pageUp", () => {
+    if (isGodmodeActive) {
+      recenterState = 0;
+      if (isSelectModeActive) {
+        vscode.commands.executeCommand("cursorPageUpSelect");
+      } else {
+        vscode.commands.executeCommand("cursorPageUp");
+      }
+    }
+  });
+  const saveFile = vscode.commands.registerCommand("godmode.saveFile", () => {
+    if (isGodmodeActive) {
+      vscode.commands.executeCommand("workbench.action.files.save");
+    }
+  });
+  const showAllEditors = vscode.commands.registerCommand(
+    "godmode.showAllEditors",
+    () => {
+      if (isGodmodeActive) {
+        vscode.commands.executeCommand("workbench.action.showAllEditors");
+      }
+    }
+  );
+  const focusFilesExplorer = vscode.commands.registerCommand(
+    "godmode.focusFilesExplorer",
+    () => {
+      if (isGodmodeActive) {
+        vscode.commands.executeCommand(
+          "workbench.action.toggleSidebarVisibility"
+        );
+      }
+    }
+  );
+  const openFile = vscode.commands.registerCommand("godmode.openFile", () => {
+    if (isGodmodeActive) {
+      vscode.commands.executeCommand("workbench.action.quickOpen");
+    }
+  });
+  const forwardSearch = vscode.commands.registerCommand(
+    "godmode.forwardSearch",
+    () => {
+      if (isGodmodeActive) {
+        vscode.commands.executeCommand("actions.find");
+      }
+    }
+  );
+  const beginningOfLine = vscode.commands.registerCommand(
+    "godmode.beginningOfLine",
+    () => {
+      if (isGodmodeActive) {
+        recenterState = 0;
+        if (isSelectModeActive) {
+          vscode.commands.executeCommand("cursorHomeSelect");
+        } else {
+          vscode.commands.executeCommand("cursorHome");
+        }
+      }
+    }
+  );
+  const endOfLine = vscode.commands.registerCommand("godmode.endOfLine", () => {
+    if (isGodmodeActive) {
+      recenterState = 0;
+      if (isSelectModeActive) {
+        vscode.commands.executeCommand("cursorEndSelect");
+      } else {
+        vscode.commands.executeCommand("cursorEnd");
+      }
+    }
+  });
+  const recenterTopBottom = vscode.commands.registerCommand(
+    "godmode.recenterTopBottom",
+    () => {
+      if (isGodmodeActive) {
+        const editor = vscode.window.activeTextEditor;
+        if (editor) {
+          const currentPosition = editor.selection.active;
+          const range = new vscode.Range(currentPosition, currentPosition);
+          if (recenterState === 0) {
+            editor.revealRange(range, vscode.TextEditorRevealType.AtTop);
+            recenterState = 1;
+          } else if (recenterState === 1) {
+            editor.revealRange(range, vscode.TextEditorRevealType.InCenter);
+            recenterState = 2;
+          } else {
+            const visibleRanges = editor.visibleRanges;
+            if (visibleRanges.length > 0) {
+              const visibleRange = visibleRanges[0];
+              const linesInView = visibleRange.end.line - visibleRange.start.line;
+              const targetLine = Math.max(
+                0,
+                currentPosition.line - linesInView + 1
+              );
+              const targetPosition = new vscode.Position(targetLine, 0);
+              const targetRange = new vscode.Range(
+                targetPosition,
+                targetPosition
+              );
+              editor.revealRange(
+                targetRange,
+                vscode.TextEditorRevealType.AtTop
+              );
+            }
+            recenterState = 0;
+          }
+        }
+      }
+    }
+  );
+  const killRegion = vscode.commands.registerCommand(
+    "godmode.killRegion",
+    async () => {
+      if (isGodmodeActive) {
+        await vscode.commands.executeCommand("emacs-mcx.killRegion");
+      }
+    }
+  );
+  const killLine = vscode.commands.registerCommand(
+    "godmode.killLine",
+    async () => {
+      if (isGodmodeActive) {
+        await vscode.commands.executeCommand("emacs-mcx.killLine");
+      }
+    }
+  );
+  const foldAll = vscode.commands.registerCommand("godmode.foldAll", () => {
+    if (isGodmodeActive) {
+      vscode.commands.executeCommand("editor.foldAll");
+    }
+  });
+  const unfoldRecursively = vscode.commands.registerCommand(
+    "godmode.unfoldRecursively",
+    () => {
+      if (isGodmodeActive) {
+        vscode.commands.executeCommand("editor.unfoldRecursively");
+      }
+    }
+  );
+  const unfoldAll = vscode.commands.registerCommand("godmode.unfoldAll", () => {
+    if (isGodmodeActive) {
+      vscode.commands.executeCommand("editor.unfoldAll");
+    }
+  });
+  const foldLevel1 = vscode.commands.registerCommand(
+    "godmode.foldLevel1",
+    () => {
+      if (isGodmodeActive) {
+        vscode.commands.executeCommand("editor.foldLevel1");
+      }
+    }
+  );
+  const foldLevel2 = vscode.commands.registerCommand(
+    "godmode.foldLevel2",
+    () => {
+      if (isGodmodeActive) {
+        vscode.commands.executeCommand("editor.foldLevel2");
+      }
+    }
+  );
+  const foldLevel3 = vscode.commands.registerCommand(
+    "godmode.foldLevel3",
+    () => {
+      if (isGodmodeActive) {
+        vscode.commands.executeCommand("editor.foldLevel3");
+      }
+    }
+  );
+  const lineBreakInsert = vscode.commands.registerCommand(
+    "godmode.lineBreakInsert",
+    () => {
+      if (isGodmodeActive) {
+        vscode.commands.executeCommand("lineBreakInsert");
+      }
+    }
+  );
+  const yank = vscode.commands.registerCommand("godmode.yank", async () => {
+    if (isGodmodeActive) {
+      await vscode.commands.executeCommand("emacs-mcx.yank");
+    }
+  });
+  const deleteRight = vscode.commands.registerCommand(
+    "godmode.deleteRight",
+    () => {
+      if (isGodmodeActive) {
+        vscode.commands.executeCommand("deleteRight");
+      }
+    }
+  );
+  const closeActiveEditor = vscode.commands.registerCommand(
+    "godmode.closeActiveEditor",
+    () => {
+      if (isGodmodeActive) {
+        vscode.commands.executeCommand("workbench.action.closeActiveEditor");
+      }
+    }
+  );
+  const newLine = vscode.commands.registerCommand("godmode.newLine", () => {
+    if (isGodmodeActive) {
+      vscode.commands.executeCommand("emacs-mcx.newLine");
+    }
+  });
+  const commentLine = vscode.commands.registerCommand(
+    "godmode.commentLine",
+    () => {
+      if (isGodmodeActive) {
+        vscode.commands.executeCommand("editor.action.commentLine");
+      }
+    }
+  );
+  const closeEditorsInOtherGroups = vscode.commands.registerCommand(
+    "godmode.closeEditorsInOtherGroups",
+    () => {
+      if (isGodmodeActive) {
+        vscode.commands.executeCommand(
+          "workbench.action.closeEditorsInOtherGroups"
+        );
+      }
+    }
+  );
+  const splitEditorDown = vscode.commands.registerCommand(
+    "godmode.splitEditorDown",
+    () => {
+      if (isGodmodeActive) {
+        vscode.commands.executeCommand("workbench.action.splitEditorDown");
+      }
+    }
+  );
+  const splitEditorRight = vscode.commands.registerCommand(
+    "godmode.splitEditorRight",
+    () => {
+      if (isGodmodeActive) {
+        vscode.commands.executeCommand("workbench.action.splitEditorRight");
+      }
+    }
+  );
+  const highlightWords = vscode.commands.registerCommand(
+    "godmode.highlightWords",
+    () => {
+      if (isGodmodeActive) {
+        vscode.commands.executeCommand("highlightwords.addHighlight");
+      }
+    }
+  );
+  const navigateEditorGroups = vscode.commands.registerCommand(
+    "godmode.navigateEditorGroups",
+    () => {
+      if (isGodmodeActive) {
+        vscode.commands.executeCommand("workbench.action.navigateEditorGroups");
+      }
+    }
+  );
+  const gotoLine = vscode.commands.registerCommand("godmode.gotoLine", () => {
+    if (isGodmodeActive) {
+      vscode.commands.executeCommand("emacs-mcx.gotoLine");
+    }
+  });
+  const copyWithAltW = vscode.commands.registerCommand(
+    "godmode.copyWithAltW",
+    async () => {
+      if (isGodmodeActive) {
+        if (isSelectModeActive) {
+          isSelectModeActive = false;
+          updateStatusBar();
+        }
+        await vscode.commands.executeCommand("emacs-mcx.copyRegion");
+      }
+    }
+  );
+  context.subscriptions.push(
+    toggleGodmode,
+    toggleSelectMode,
+    moveDown,
+    moveUp,
+    moveForward,
+    moveBackward,
+    pageDown,
+    pageUp,
+    saveFile,
+    showAllEditors,
+    focusFilesExplorer,
+    openFile,
+    forwardSearch,
+    beginningOfLine,
+    endOfLine,
+    recenterTopBottom,
+    killRegion,
+    killLine,
+    foldAll,
+    unfoldRecursively,
+    unfoldAll,
+    foldLevel1,
+    foldLevel2,
+    foldLevel3,
+    lineBreakInsert,
+    yank,
+    deleteRight,
+    closeActiveEditor,
+    newLine,
+    commentLine,
+    closeEditorsInOtherGroups,
+    splitEditorDown,
+    splitEditorRight,
+    highlightWords,
+    navigateEditorGroups,
+    gotoLine,
+    copyWithAltW
+  );
+  setupTypingPrevention(context);
+  setupTextChangeListener(context);
+}
+function setupTextChangeListener(context) {
+  const textDocumentChangeListener = vscode.workspace.onDidChangeTextDocument(
+    (event) => {
+      if (!isGodmodeActive) {
+        return;
+      }
+      if (isGodmodeActive && isSelectModeActive && event.contentChanges.length > 0) {
+        isSelectModeActive = false;
+        updateStatusBar();
+      }
+    }
+  );
+  context.subscriptions.push(textDocumentChangeListener);
+}
+function updateCursorStyle(mode) {
+  try {
+    const cursorStyle = mode === "normal" ? "block" : "line";
+    vscode.workspace.getConfiguration("editor").update("cursorStyle", cursorStyle, vscode.ConfigurationTarget.Global);
+  } catch (error) {
+    console.log("Could not update cursor style:", error);
+  }
+}
+function updateStatusBar() {
+  if (isGodmodeActive) {
+    if (isSelectModeActive) {
+      statusBarItem.text = "$(selection) Select Mode";
+      statusBarItem.color = "#61dafb";
+      updateCursorStyle("select");
+    } else {
+      statusBarItem.text = "$(circle-filled) Godmode";
+      statusBarItem.color = "#ff6b6b";
+      updateCursorStyle("godmode");
+    }
+  } else {
+    statusBarItem.text = "$(circle-outline) Normal";
+    statusBarItem.color = void 0;
+    updateCursorStyle("normal");
+  }
+}
+function setupTypingPrevention(context) {
+  const typeCommand = vscode.commands.registerCommand("type", (args) => {
+    if (isGodmodeActive && !isSelectModeActive) {
+      return;
+    }
+    if (isSelectModeActive) {
+      isSelectModeActive = false;
+      updateStatusBar();
+    }
+    return vscode.commands.executeCommand("default:type", args);
+  });
+  context.subscriptions.push(typeCommand);
+}
+function deactivate() {
+  if (statusBarItem) {
+    statusBarItem.dispose();
+  }
+  try {
+    vscode.workspace.getConfiguration("editor").update("cursorStyle", "block", vscode.ConfigurationTarget.Global);
+  } catch (error) {
+    console.log("Could not restore cursor settings:", error);
+  }
+}
+// Annotate the CommonJS export names for ESM import in node:
+0 && (module.exports = {
+  activate,
+  deactivate
+});
+//# sourceMappingURL=extension.js.map

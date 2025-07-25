@@ -24,7 +24,7 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(statusBarItem);
 
 	// Initialize cursor style to block (normal editing mode)
-	updateCursorStyle(false);
+	updateCursorStyle("normal");
 
 	// Register toggle godmode command (bound to Escape)
 	const toggleGodmode = vscode.commands.registerCommand(
@@ -264,18 +264,23 @@ export function activate(context: vscode.ExtensionContext) {
 
 	const killRegion = vscode.commands.registerCommand(
 		"godmode.killRegion",
-		() => {
+		async () => {
 			if (isGodmodeActive) {
-				vscode.commands.executeCommand("emacs-mcx.killRegion");
+				await vscode.commands.executeCommand("emacs-mcx.killRegion");
 			}
 		},
 	);
 
-	const killLine = vscode.commands.registerCommand("godmode.killLine", () => {
-		if (isGodmodeActive) {
-			vscode.commands.executeCommand("emacs-mcx.killLine");
-		}
-	});
+	const killLine = vscode.commands.registerCommand(
+		"godmode.killLine",
+		async () => {
+			if (isGodmodeActive) {
+				await vscode.commands.executeCommand("emacs-mcx.killLine");
+				// isSelectModeActive = false;
+				// updateStatusBar();
+			}
+		},
+	);
 
 	// Code folding commands
 	const foldAll = vscode.commands.registerCommand("godmode.foldAll", () => {
@@ -335,9 +340,9 @@ export function activate(context: vscode.ExtensionContext) {
 		},
 	);
 
-	const yank = vscode.commands.registerCommand("godmode.yank", () => {
+	const yank = vscode.commands.registerCommand("godmode.yank", async () => {
 		if (isGodmodeActive) {
-			vscode.commands.executeCommand("emacs-mcx.yank");
+			await vscode.commands.executeCommand("emacs-mcx.yank");
 		}
 	});
 
@@ -428,6 +433,23 @@ export function activate(context: vscode.ExtensionContext) {
 		}
 	});
 
+	// Register Alt+W copy command that performs copy and exits select mode
+	const copyWithAltW = vscode.commands.registerCommand(
+		"godmode.copyWithAltW",
+		async () => {
+			if (isGodmodeActive) {
+				// Exit select mode if active
+				if (isSelectModeActive) {
+					isSelectModeActive = false;
+					updateStatusBar();
+				}
+
+				// Perform the copy operation using Emacs-MCX
+				await vscode.commands.executeCommand("emacs-mcx.copyRegion");
+			}
+		},
+	);
+
 	// Add all commands to subscriptions
 	context.subscriptions.push(
 		toggleGodmode,
@@ -466,16 +488,43 @@ export function activate(context: vscode.ExtensionContext) {
 		highlightWords,
 		navigateEditorGroups,
 		gotoLine,
+		copyWithAltW,
 	);
 
 	// Set up typing prevention when godmode is active
 	setupTypingPrevention(context);
+
+	// Set up text document change listener to exit select mode on any text changes
+	setupTextChangeListener(context);
 }
 
-function updateCursorStyle(isGodmode: boolean) {
+function setupTextChangeListener(context: vscode.ExtensionContext) {
+	// Listen for text document changes
+	const textDocumentChangeListener = vscode.workspace.onDidChangeTextDocument(
+		(event) => {
+			if (!isGodmodeActive) {
+				return;
+			}
+
+			// If we're in select mode and there were content changes, exit select mode
+			if (
+				isGodmodeActive &&
+				isSelectModeActive &&
+				event.contentChanges.length > 0
+			) {
+				isSelectModeActive = false;
+				updateStatusBar();
+			}
+		},
+	);
+
+	context.subscriptions.push(textDocumentChangeListener);
+}
+
+function updateCursorStyle(mode: "normal" | "godmode" | "select") {
 	// Use try-catch to prevent configuration update errors
 	try {
-		const cursorStyle = isGodmode ? "line" : "block";
+		const cursorStyle = mode === "normal" ? "block" : "line";
 		vscode.workspace
 			.getConfiguration("editor")
 			.update("cursorStyle", cursorStyle, vscode.ConfigurationTarget.Global);
@@ -490,17 +539,19 @@ function updateStatusBar() {
 		if (isSelectModeActive) {
 			statusBarItem.text = "$(selection) Select Mode";
 			statusBarItem.color = "#61dafb";
+			// Set cursor to line for select mode
+			updateCursorStyle("select");
 		} else {
 			statusBarItem.text = "$(circle-filled) Godmode";
 			statusBarItem.color = "#ff6b6b";
+			// Set cursor to line for godmode (navigation mode)
+			updateCursorStyle("godmode");
 		}
-		// Set cursor to line when in godmode (navigation mode)
-		updateCursorStyle(true);
 	} else {
 		statusBarItem.text = "$(circle-outline) Normal";
 		statusBarItem.color = undefined;
-		// Set cursor to block when not in godmode (editing mode)
-		updateCursorStyle(false);
+		// Set cursor to block for normal mode
+		updateCursorStyle("normal");
 	}
 }
 
@@ -529,5 +580,16 @@ function setupTypingPrevention(context: vscode.ExtensionContext) {
 export function deactivate() {
 	if (statusBarItem) {
 		statusBarItem.dispose();
+	}
+
+	// Restore cursor to normal state when extension is deactivated
+	try {
+		// Reset cursor style to block
+		vscode.workspace
+			.getConfiguration("editor")
+			.update("cursorStyle", "block", vscode.ConfigurationTarget.Global);
+	} catch (error) {
+		// Silently ignore configuration errors
+		console.log("Could not restore cursor settings:", error);
 	}
 }
