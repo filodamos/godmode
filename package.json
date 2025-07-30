@@ -2,7 +2,7 @@
   "name": "godmode",
   "displayName": "Godmode",
   "description": "An emacs-inspired modal editing extension for VS Code with navigation, text selection, and file operations",
-  "version": "0.1.25",
+  "version": "0.1.26",
   "publisher": "filodamos",
   "author": {
     "name": "Filodamos Papanatsios",
@@ -251,6 +251,11 @@
       {
         "command": "godmode.forwardSearch",
         "key": "s",
+        "when": "editorTextFocus && godmode.active"
+      },
+      {
+        "command": "godmode.backwardSearch",
+        "key": "r",
         "when": "editorTextFocus && godmode.active"
       },
       {
