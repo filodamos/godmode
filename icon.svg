@@ -1,0 +1,11 @@
+<svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+    <!-- Background circle -->
+    <circle cx="64" cy="64" r="60" fill="#2D3748" stroke="#4A5568" stroke-width="2" />
+
+    <!-- Letter G for Godmode -->
+    <text x="64" y="80" font-family="Arial, sans-serif" font-size="48" font-weight="bold"
+        fill="#E2E8F0" text-anchor="middle">G</text>
+
+    <!-- Small indicator for modal state -->
+    <circle cx="96" cy="32" r="8" fill="#48BB78" />
+</svg>
