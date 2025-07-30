@@ -190,6 +190,15 @@ export function activate(context: vscode.ExtensionContext) {
 		},
 	);
 
+	const backwardSearch = vscode.commands.registerCommand(
+		"godmode.backwardSearch",
+		() => {
+			if (isGodmodeActive) {
+				vscode.commands.executeCommand("emacs-mcx.isearchBackward");
+			}
+		},
+	);
+
 	const beginningOfLine = vscode.commands.registerCommand(
 		"godmode.beginningOfLine",
 		() => {
@@ -465,6 +474,7 @@ export function activate(context: vscode.ExtensionContext) {
 		focusFilesExplorer,
 		openFile,
 		forwardSearch,
+		backwardSearch,
 		beginningOfLine,
 		endOfLine,
 		recenterTopBottom,
